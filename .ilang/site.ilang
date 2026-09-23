@@ -3,7 +3,7 @@ TYPE: config
 PROJECT: VPS Deal Radar
 LANG: zh
 
-::STATE{@SITE, brand:VPS Deal Radar, niche:vps hosting, domain:https://vpsdealradar.pages.dev}
+::STATE{@SITE, brand:VPS Deal Radar, niche:vps hosting, domain:https://vps-dealradar.com}
 
 ::MODULE{PROVIDERS|title:public provider sources}
   Hetzner | https://www.hetzner.com/ | https://www.hetzner.com/ | 
