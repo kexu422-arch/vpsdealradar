@@ -29,7 +29,9 @@ def load_config():
         if in_providers and line and not line.startswith("::") and "|" in line:
             name, website, source, affiliate = [x.strip() for x in line.split("|", 3)]
             providers.append({"name": name, "website": website, "source": source, "affiliate": affiliate})
-    return {"brand": state.group(1).strip(), "niche": state.group(2).strip(), "domain": state.group(3).strip(), "providers": providers}
+    eligible = re.search(r"::RULE\{eligible_shapes:([^⇒}]+)", text)
+    eligible_shapes = [item.strip() for item in eligible.group(1).split("|")] if eligible else []
+    return {"brand": state.group(1).strip(), "niche": state.group(2).strip(), "domain": state.group(3).strip(), "providers": providers, "eligible_shapes": eligible_shapes}
 
 
 def allowed(url):
@@ -53,14 +55,23 @@ def fetch(url):
         return ""
 
 
-def extract(provider, html, fetched_at):
+def extract(provider, html, fetched_at, eligible_shapes):
     if not html:
         return []
     plain = re.sub(r"<script[\s\S]*?</script>|<style[\s\S]*?</style>", " ", html, flags=re.I)
     plain = re.sub(r"<[^>]+>", " ", plain)
     plain = re.sub(r"\s+", " ", plain).strip()
-    # Only emit a record when the public page contains an explicit deal/sale/discount signal.
-    matches = re.findall(r"[^.]{0,160}(?:discount|deal|sale|promo|coupon|offer)[^.]{0,240}\.?", plain, flags=re.I)
+    # Only emit a record when the public page explicitly matches a configured shape.
+    shape_patterns = {
+        "限时": r"limited\s*time|time[- ]limited|限时|ends?\s+(?:on|soon)|expires?|valid\s+until",
+        "首月免费": r"first\s+month\s+free|首月免费|first\s+month\s+at\s+\$?0",
+        "带优惠码": r"promo\s+code|coupon\s+code|discount\s+code|优惠码|coupon",
+    }
+    patterns = [shape_patterns[name] for name in eligible_shapes if name in shape_patterns]
+    if not patterns:
+        return []
+    shape_pattern = "(?:" + "|".join(patterns) + ")"
+    matches = re.findall(r"[^.]{0,160}" + shape_pattern + r"[^.]{0,240}\.?", plain, flags=re.I)
     offers = []
     for item in matches[:20]:
         item = item.strip()
@@ -83,7 +94,7 @@ def main():
     fetched_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     offers = []
     for provider in config["providers"]:
-        offers.extend(extract(provider, fetch(provider["source"]), fetched_at))
+        offers.extend(extract(provider, fetch(provider["source"]), fetched_at, config["eligible_shapes"]))
         time.sleep(1)
     (ROOT / "data").mkdir(exist_ok=True)
     (ROOT / "data" / "offers.json").write_text(json.dumps({"fetched_at": fetched_at, "offers": offers}, indent=2), encoding="utf-8")

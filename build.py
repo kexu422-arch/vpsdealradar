@@ -71,6 +71,7 @@ def main():
         target = SITE / 'deals' / slug; target.mkdir(parents=True, exist_ok=True)
         (target / 'index.html').write_text(deal_page(o, cfg, slug), encoding='utf-8')
     (SITE / "about").mkdir(); (SITE / "about" / "index.html").write_text(layout(f"About — {cfg['brand']}", "Rules and data sources for this VPS deal site.", '<section class="hero"><h1>About this site</h1><p>We scan public provider pages permitted by robots.txt. We do not invent offers, prices, commissions, or validity dates. Links are labeled as sponsored only when an affiliate URL is configured.</p><p>Site rules are maintained in <code>.ilang/site.ilang</code>.</p></section>', cfg['domain'] + '/about/', cfg), encoding="utf-8")
+    (SITE / "404.html").write_text(layout(f"Page not found — {cfg['brand']}", "The requested page was not found.", '<section class="hero"><h1>Page not found</h1><p>The requested address does not exist on this site.</p><a class="button" href="/">Return home</a></section>', cfg['domain'] + '/404.html', cfg), encoding="utf-8")
     urls = ['', 'providers/', 'compare/', 'about/']; now = data.get('fetched_at', datetime.now(timezone.utc).date().isoformat())
     (SITE / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join(f'<url><loc>{cfg["domain"]}/{u}</loc><lastmod>{now}</lastmod></url>' for u in urls) + '</urlset>', encoding="utf-8")
     (SITE / "robots.txt").write_text('User-agent: *\nAllow: /\nSitemap: ' + cfg['domain'] + '/sitemap.xml\n', encoding="utf-8")

@@ -16,4 +16,5 @@ LANG: zh
 ::RULE{robots.txt disallow⇒skip source; no login pages; no anti-bot bypass}
 ::RULE{抓不到 price⇒这条不写 price 字段 也不写进结构化数据 不许拿估的填}
 ::RULE{valid_until 已过⇒标记过期或下架 不许留着冒充有效}
+::RULE{eligible_shapes:限时|首月免费|带优惠码⇒后续只收页面明确符合其中至少一种形状的优惠；厂商常规标价和产品发布不算优惠；已入库记录不回溯删除}
 ::BOUNDARY{never:编优惠 编价格 编佣金|scope:permanent}
