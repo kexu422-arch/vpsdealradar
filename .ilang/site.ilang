@@ -1,0 +1,19 @@
+ILANG
+TYPE: config
+PROJECT: VPS Deal Radar
+LANG: zh
+
+::STATE{@SITE, brand:VPS Deal Radar, niche:vps hosting, domain:https://vps-deal-radar.pages.dev}
+
+::MODULE{PROVIDERS|title:public provider sources}
+  Hetzner | https://www.hetzner.com/ | https://www.hetzner.com/ | 
+  DigitalOcean | https://www.digitalocean.com/ | https://www.digitalocean.com/try | 
+  Vultr | https://www.vultr.com/ | https://www.vultr.com/promo/ | 
+
+::MODULE{FIELDS|title:offer fields}
+  title price currency offer_url valid_until source_url fetched_at
+
+::RULE{robots.txt disallow⇒skip source; no login pages; no anti-bot bypass}
+::RULE{抓不到 price⇒这条不写 price 字段 也不写进结构化数据 不许拿估的填}
+::RULE{valid_until 已过⇒标记过期或下架 不许留着冒充有效}
+::BOUNDARY{never:编优惠 编价格 编佣金|scope:permanent}
