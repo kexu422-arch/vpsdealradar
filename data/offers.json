@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-09-24T01:51:58+00:00",
+  "fetched_at": "2026-09-24T02:06:21+00:00",
   "offers": [
     {
       "title": "September 2026 Hetzner expands its GPU portfolio with the GEX45 With the new GEX45, hosting provider Hetzner is expanding its offerings to include a GPU server designed for entry-l",
@@ -10,7 +10,7 @@
       "valid_until": null,
       "source_url": "https://www.hetzner.com/",
       "provider": "Hetzner",
-      "fetched_at": "2026-09-24T01:51:58+00:00",
+      "fetched_at": "2026-09-24T02:06:21+00:00",
       "affiliate_url": "https://www.hetzner.com/"
     }
   ]
