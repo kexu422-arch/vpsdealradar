@@ -21,3 +21,9 @@ jobs:
           git add data/offers.json site
           git diff --cached --quiet || git commit -m "chore: update public offers"
           git push
+      - name: Deploy site to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 859f9c31ea30a9fc5a32bca4bd4e053f
+          command: pages deploy site --project-name vpsdealradar --branch main
